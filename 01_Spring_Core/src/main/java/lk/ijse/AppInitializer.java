@@ -9,48 +9,31 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 public class AppInitializer {
     public static void main(String[] args) {
-
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
         context.register(AppConfig.class);
         context.refresh();
 
-//        SpringBean springBean1 = new SpringBean();
-//        SpringBean springBean2 = new SpringBean();
-//        System.out.println("POJO"+springBean1);
-//        System.out.println("POJO"+springBean2);
-//
-//        SpringBean springBean3 = context.getBean(SpringBean.class);
-//        SpringBean springBean4 = context.getBean(SpringBean.class);
-//        System.out.println("Bean"+springBean3);
-//        System.out.println("Bean"+springBean4);
+        //Bean ID
+        SpringBean springBean= (SpringBean) context.getBean("springBean");
+        System.out.println("Bean : " + springBean);
+        //by class name
+        TestBean testBean1 = context.getBean(TestBean.class);
+        System.out.println("Bean : " + testBean1);
+        //by bean ID
+        TestBean testBean2 = (TestBean) context.getBean("exampleBean");
+        System.out.println("Bean : " + testBean2);
+        //by beanID & className
+        TestBean testBean3 = context.getBean("exampleBean",TestBean.class);
+        System.out.println("Bean : " + testBean3);
 
 
-//        SpringBean springBean = (SpringBean) context.getBean("springBean");
-//        System.out.println(springBean);
-//
-//        //call by class
-//        TestBean testBeanClass = context.getBean(TestBean.class);
-//        System.out.println(testBeanClass);
-//
-//        //call by id
-//        TestBean testBeanId = (TestBean) context.getBean("exampleBean");
-//        System.out.println(testBeanId);
-//
-//        //call by id and class
-//        TestBean testBeanIdClass = context.getBean("exampleBean", TestBean.class);
-//        System.out.println(testBeanIdClass);
-//
-//        //call to method
-//        TestBean print = context.getBean(TestBean.class);
-//        print.PrintMessage();
-//
-//        NewTestBean newTestBean = context.getBean(NewTestBean.class);
-//        System.out.println(newTestBean);
+        MyConnection myConnection1 = (MyConnection) context.getBean("connection");
+        System.out.println("MyConnection : " + myConnection1);
+        MyConnection myConnection2 = context.getBean("connection",MyConnection.class);
+        System.out.println("MyConnection : " + myConnection2);
 
-        MyConnection myConnection1 = (MyConnection)context.getBean("connection");
-        System.out.println(myConnection1);
+
 
         context.registerShutdownHook();
-
     }
 }

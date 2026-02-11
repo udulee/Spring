@@ -13,8 +13,8 @@ public class AppConfig {
     public AppConfig(){
         System.out.println("AppConfig");
     }
-    @Bean
-    SpringBean springBean(){
-        return new SpringBean();
-    }
+//    @Bean
+//    SpringBean springBean(){
+//        return new SpringBean();
+//    }
 }

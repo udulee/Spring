@@ -8,30 +8,30 @@ import org.springframework.context.ApplicationContextAware;
 public class SpringBean02  implements BeanNameAware, BeanFactoryAware,
         ApplicationContextAware, InitializingBean, DisposableBean {
     public  SpringBean02() {
-        System.out.println("SpringBeanTwo - Object Created");
+        System.out.println("SpringBean02 - Object Created");
     }
     @Override
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-        System.out.println("SpringBeanTwo - BeanFactoryAware");
+        System.out.println("SpringBean02 - BeanFactoryAware");
     }
 
     @Override
     public void setBeanName(String name) {
-        System.out.println("SpringBeanTwo - BeanNameAware");
+        System.out.println("SpringBean02 - BeanNameAware");
     }
 
     @Override
     public void destroy() throws Exception {
-        System.out.println("SpringBeanTwo - DisposableBean");
+        System.out.println("SpringBean02 - DisposableBean");
     }
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        System.out.println("SpringBeanTwo - InitializingBean");
+        System.out.println("SpringBean02 - InitializingBean");
     }
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        System.out.println("SpringBeanTwo - ApplicationContextAware");
+        System.out.println("SpringBean02 - ApplicationContextAware");
     }
 }
