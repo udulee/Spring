@@ -9,8 +9,8 @@
 body {
     font-family: "Segoe UI", Tahoma, sans-serif;
     height: 100vh;
-    background: #6605ab;
-    background: linear-gradient(90deg, rgba(102, 5, 171, 1) 0%, rgba(49, 0, 92, 1) 35%, rgba(0, 0, 140, 1) 100%);
+    background: green;
+    background: linear-gradient(90deg, rgb(5, 171, 171) 0%, rgb(0, 15, 92) 35%, rgb(77, 0, 140) 100%);
     display: flex;
     justify-content: center;
     align-items: center;
