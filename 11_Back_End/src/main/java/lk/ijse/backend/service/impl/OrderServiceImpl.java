@@ -48,7 +48,7 @@ public class OrderServiceImpl implements OrderService {
 
         // 1. Validate customer exists (cId is Integer in Customer entity)
         Integer custId = parseIntId(orderDTO.getCustomerId(), "Customer ID");
-        if (!customerRepository.existsById(String.valueOf(custId))) {
+        if (!customerRepository.existsById(custId)) {
             throw new CustomException("Customer not found with ID: " + orderDTO.getCustomerId());
         }
 

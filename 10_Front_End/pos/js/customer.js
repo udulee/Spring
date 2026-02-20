@@ -1,137 +1,227 @@
-// Function to save customer
+const BASE_URL = "http://localhost:8080/api/v1/customer";
+
+// ================= SAVE CUSTOMER =================
 function saveCustomer() {
-    // Get values from form - fixed IDs to match HTML
-    let cId = $('#customerId').val();
-    let cName = $('#customerName').val();
-    let cAddress = $('#customerAddress').val(); // Fixed typo: was "Adress"
-    let cPhone = $('#customerPhone').val();
 
-    // Validation
-    if (!cId || !cName || !cAddress || !cPhone) {
-        alert("Please fill in all fields!");
-        return;
-    }
-
-    console.log(cId, cName, cAddress, cPhone);
+    let customerData = {
+        cName: $('#customerName').val(),
+        cAddress: $('#customerAddress').val(),
+        cPhone: $('#customerPhone').val()
+    };
 
     $.ajax({
-        url: "http://localhost:8080/api/v1/customer",
+        url: BASE_URL,
         method: "POST",
         contentType: "application/json",
-        data: JSON.stringify({
-            "cId": cId,
-            "cName": cName,
-            "cAddress": cAddress,
-            "cPhone": cPhone
-        }),
-        success: function(response) {
-            console.log("Customer saved successfully!");
-            alert("Customer Saved!");
-            // Clear form
+        data: JSON.stringify(customerData),
+
+        success: function(res) {
+
+            if(res && res.message){
+                alert(res.message);
+            }else{
+                alert("Customer Saved Successfully!");
+            }
+
             $('#customerForm')[0].reset();
-            // Reload customer list
             loadCustomers();
         },
-        error: function(xhr, status, error) {
-            console.error(xhr.responseText);
-            alert("Error saving customer: " + xhr.responseText);
+
+        error: function(xhr) {
+
+            if(xhr.status === 0){
+                alert("Cannot connect to backend! Please start Spring Boot server.");
+            }
+            else if(xhr.responseJSON && xhr.responseJSON.message){
+                alert("Error: " + xhr.responseJSON.message);
+            }
+            else{
+                alert("Customer Save Failed!");
+            }
+
         }
     });
+
 }
 
-// Function to update customer
-function updateCustomer() {
-    let cId = $('#customerId').val();
-    let cName = $('#customerName').val();
-    let cAddress = $('#customerAddress').val();
-    let cPhone = $('#customerPhone').val();
 
-    if (!cId || !cName || !cAddress || !cPhone) {
-        alert("Please fill in all fields!");
+// ================= LOAD CUSTOMERS =================
+function loadCustomers() {
+
+    $.ajax({
+        url: BASE_URL,
+        method: "GET",
+
+        success: function(response) {
+
+            let tbody = $('#customerTableBody');
+            tbody.empty();
+
+            if(response.data){
+
+                response.data.forEach(function(customer){
+
+                    let row = `<tr>
+                        <td>${customer.cId}</td>
+                        <td>${customer.cName}</td>
+                        <td>${customer.cAddress}</td>
+                        <td>${customer.cPhone}</td>
+                    </tr>`;
+
+                    let $row = $(row);
+
+                    $row.click(function(){
+                        populateForm(
+                            customer.cId,
+                            customer.cName,
+                            customer.cAddress,
+                            customer.cPhone
+                        );
+                    });
+
+                    tbody.append($row);
+
+                });
+
+            }
+
+        },
+
+        error: function(xhr){
+
+            if(xhr.status === 0){
+                alert("Cannot connect to backend! Please start Spring Boot server.");
+            }
+            else{
+                alert("Failed to load customers!");
+            }
+
+        }
+
+    });
+
+}
+
+
+// ================= UPDATE CUSTOMER =================
+function updateCustomer() {
+
+    let id = $('#customerId').val();
+
+    if(!id){
+        alert("Please select a customer first!");
         return;
     }
 
+    let customerData = {
+        cId: parseInt(id),
+        cName: $('#customerName').val(),
+        cAddress: $('#customerAddress').val(),
+        cPhone: $('#customerPhone').val()
+    };
+
     $.ajax({
-        url: "http://localhost:8080/api/v1/customer/" + cId,
+
+        url: BASE_URL + "/" + id,
         method: "PUT",
         contentType: "application/json",
-        data: JSON.stringify({
-            "cId": cId,
-            "cName": cName,
-            "cAddress": cAddress,
-            "cPhone": cPhone
-        }),
-        success: function(response) {
-            alert("Customer Updated!");
-            $('#customerForm')[0].reset();
+        data: JSON.stringify(customerData),
+
+        success: function(res){
+
+            alert("Customer Updated Successfully!");
+
             loadCustomers();
+            clearForm();
+
         },
-        error: function(xhr, status, error) {
-            console.error(xhr.responseText);
-            alert("Error updating customer: " + xhr.responseText);
+
+        error: function(xhr){
+
+            if(xhr.status === 0){
+                alert("Cannot connect to backend!");
+            }
+            else if(xhr.responseJSON && xhr.responseJSON.message){
+                alert(xhr.responseJSON.message);
+            }
+            else{
+                alert("Update Failed!");
+            }
+
         }
+
     });
+
 }
 
-// Function to delete customer
-function deleteCustomer() {
-    let cId = $('#customerId').val();
 
-    if (!cId) {
-        alert("Please enter Customer ID to delete!");
+// ================= DELETE CUSTOMER =================
+function deleteCustomer() {
+
+    let id = $('#customerId').val();
+
+    if(!id){
+        alert("Please select customer first!");
         return;
     }
 
-    if (confirm("Are you sure you want to delete customer " + cId + "?")) {
+    if(confirm("Are you sure you want to delete this customer?")){
+
         $.ajax({
-            url: "http://localhost:8080/api/v1/customer/" + cId,
+
+            url: BASE_URL + "/" + id,
             method: "DELETE",
-            success: function(response) {
-                alert("Customer Deleted!");
-                $('#customerForm')[0].reset();
+
+            success: function(){
+
+                alert("Customer Deleted Successfully!");
+
                 loadCustomers();
+                clearForm();
+
             },
-            error: function(xhr, status, error) {
-                console.error(xhr.responseText);
-                alert("Error deleting customer: " + xhr.responseText);
+
+            error: function(xhr){
+
+                if(xhr.status === 0){
+                    alert("Cannot connect to backend!");
+                }
+                else{
+                    alert("Delete Failed!");
+                }
+
             }
+
         });
+
     }
+
 }
 
-// Function to load all customers
-function loadCustomers() {
-    $.ajax({
-        url: "http://localhost:8080/api/v1/customer",
-        method: "GET",
-        success: function(customers) {
-            let tbody = $('#customerTableBody');
-            tbody.empty(); // Clear existing rows
 
-            customers.forEach(function(customer) {
-                let row = `<tr onclick="populateForm('${customer.cId}', '${customer.cName}', '${customer.cAddress}', '${customer.cPhone}')">
-                    <td>${customer.cId}</td>
-                    <td>${customer.cName}</td>
-                    <td>${customer.cAddress}</td>
-                    <td>${customer.cPhone}</td>
-                </tr>`;
-                tbody.append(row);
-            });
-        },
-        error: function(xhr, status, error) {
-            console.error("Error loading customers: " + xhr.responseText);
-        }
-    });
-}
+// ================= POPULATE FORM =================
+function populateForm(id, name, address, phone){
 
-// Function to populate form when clicking on table row
-function populateForm(id, name, address, phone) {
     $('#customerId').val(id);
     $('#customerName').val(name);
     $('#customerAddress').val(address);
     $('#customerPhone').val(phone);
+
 }
 
-$(document).ready(function() {
+
+// ================= CLEAR FORM =================
+function clearForm(){
+
+    $('#customerForm')[0].reset();
+    $('#customerId').val('');
+
+}
+
+
+// ================= LOAD WHEN PAGE LOAD =================
+$(document).ready(function(){
+
     loadCustomers();
+
 });

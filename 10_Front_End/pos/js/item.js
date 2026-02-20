@@ -1,6 +1,7 @@
-// Function to save item
+const BASE_URL = "http://localhost:8080/api/v1/item";
+
+// ================= SAVE ITEM =================
 function saveItem() {
-    // Get values from form
     let itemId = $('#itemId').val();
     let itemName = $('#itemName').val();
     let itemPrice = parseFloat($('#itemPrice').val());
@@ -13,13 +14,10 @@ function saveItem() {
         alert("Please fill in all required fields!");
         return;
     }
-
-    // Validate price and quantity are positive numbers
     if (itemPrice <= 0) {
         alert("Item price must be greater than 0!");
         return;
     }
-
     if (itemQuantity < 0) {
         alert("Item quantity cannot be negative!");
         return;
@@ -28,33 +26,31 @@ function saveItem() {
     console.log("Saving item:", itemId, itemName, itemPrice, itemQuantity);
 
     $.ajax({
-        url: "http://localhost:8080/api/v1/item",
+        url: BASE_URL,
         method: "POST",
         contentType: "application/json",
         data: JSON.stringify({
-            "itemId": itemId,
-            "itemName": itemName,
-            "itemPrice": itemPrice,
-            "itemQuantity": itemQuantity,
-            "itemCost": itemCost,
-            "itemDescription": itemDescription
+            itemId,
+            itemName,
+            itemPrice,
+            itemQuantity,
+            itemCost,
+            itemDescription
         }),
         success: function(response) {
-            console.log("Item saved successfully!");
-            alert("Item Saved!");
-            // Clear form
+            alert(response.message || "Item Saved!");
             $('#itemForm')[0].reset();
-            // Reload item list
             loadItems();
         },
-        error: function(xhr, status, error) {
-            console.error(xhr.responseText);
-            alert("Error saving item: " + xhr.responseText);
+        error: function(xhr) {
+            let msg = xhr.responseJSON?.message || xhr.responseText || "Error saving item!";
+            console.error(msg);
+            alert("Error: " + msg);
         }
     });
 }
 
-// Function to update item
+// ================= UPDATE ITEM =================
 function updateItem() {
     let itemId = $('#itemId').val();
     let itemName = $('#itemName').val();
@@ -63,100 +59,101 @@ function updateItem() {
     let itemCost = parseFloat($('#itemCost').val()) || 0;
     let itemDescription = $('#itemDescription').val();
 
-    // Validation
     if (!itemId || !itemName || !itemPrice || !itemQuantity) {
         alert("Please fill in all required fields!");
         return;
     }
-
     if (itemPrice <= 0) {
         alert("Item price must be greater than 0!");
         return;
     }
-
     if (itemQuantity < 0) {
         alert("Item quantity cannot be negative!");
         return;
     }
 
     $.ajax({
-        url: "http://localhost:8080/api/v1/item/" + itemId,
+        url: BASE_URL + "/" + itemId,
         method: "PUT",
         contentType: "application/json",
         data: JSON.stringify({
-            "itemId": itemId,
-            "itemName": itemName,
-            "itemPrice": itemPrice,
-            "itemQuantity": itemQuantity,
-            "itemCost": itemCost,
-            "itemDescription": itemDescription
+            itemId,
+            itemName,
+            itemPrice,
+            itemQuantity,
+            itemCost,
+            itemDescription
         }),
         success: function(response) {
-            alert("Item Updated!");
+            alert(response.message || "Item Updated!");
             $('#itemForm')[0].reset();
             loadItems();
         },
-        error: function(xhr, status, error) {
-            console.error(xhr.responseText);
-            alert("Error updating item: " + xhr.responseText);
+        error: function(xhr) {
+            let msg = xhr.responseJSON?.message || xhr.responseText || "Error updating item!";
+            console.error(msg);
+            alert("Error: " + msg);
         }
     });
 }
 
-// Function to delete item
+// ================= DELETE ITEM =================
 function deleteItem() {
     let itemId = $('#itemId').val();
-
     if (!itemId) {
-        alert("Please enter Item ID to delete!");
+        alert("Please select an Item ID to delete!");
         return;
     }
 
     if (confirm("Are you sure you want to delete item " + itemId + "?")) {
         $.ajax({
-            url: "http://localhost:8080/api/v1/item/" + itemId,
+            url: BASE_URL + "/" + itemId,
             method: "DELETE",
             success: function(response) {
-                alert("Item Deleted!");
+                alert(response.message || "Item Deleted!");
                 $('#itemForm')[0].reset();
                 loadItems();
             },
-            error: function(xhr, status, error) {
-                console.error(xhr.responseText);
-                alert("Error deleting item: " + xhr.responseText);
+            error: function(xhr) {
+                let msg = xhr.responseJSON?.message || xhr.responseText || "Error deleting item!";
+                console.error(msg);
+                alert("Error: " + msg);
             }
         });
     }
 }
 
-// Function to load all items
+// ================= LOAD ITEMS =================
 function loadItems() {
     $.ajax({
-        url: "http://localhost:8080/api/v1/item",
+        url: BASE_URL,
         method: "GET",
-        success: function(items) {
+        success: function(response) {
+            let items = response.data || []; // ✅ safe: get array from backend
             let tbody = $('#itemTableBody');
-            tbody.empty(); // Clear existing rows
+            tbody.empty();
 
             items.forEach(function(item) {
-                let row = `<tr onclick="populateForm('${item.itemId}', '${item.itemName}', ${item.itemPrice}, ${item.itemQuantity}, ${item.itemCost}, '${item.itemDescription || ''}')">
+                let row = `<tr onclick="populateForm('${item.itemId}', '${item.itemName}', ${item.itemPrice}, ${item.itemQuantity}, ${item.itemCost || 0}, '${item.itemDescription || ''}')">
                     <td>${item.itemId}</td>
                     <td>${item.itemName}</td>
                     <td>Rs. ${item.itemPrice.toFixed(2)}</td>
                     <td>${item.itemQuantity}</td>
-                    <td>Rs. ${item.itemCost.toFixed(2)}</td>
+                    <td>Rs. ${item.itemCost?.toFixed(2) || '0.00'}</td>
                     <td>${item.itemDescription || '-'}</td>
                 </tr>`;
                 tbody.append(row);
             });
         },
-        error: function(xhr, status, error) {
-            console.error("Error loading items: " + xhr.responseText);
+        error: function(xhr) {
+            let msg = xhr.responseJSON?.message || xhr.responseText || "Failed to load items!";
+            console.error(msg);
+            alert(msg);
         }
     });
 }
 
-// Function to populate form when clicking on table row
+// ================= POPULATE FORM =================
 function populateForm(id, name, price, quantity, cost, description) {
     $('#itemId').val(id);
     $('#itemName').val(name);
@@ -166,16 +163,19 @@ function populateForm(id, name, price, quantity, cost, description) {
     $('#itemDescription').val(description);
 }
 
-// Load items when page loads
+// ================= CLEAR FORM =================
+function clearForm() {
+    $('#itemForm')[0].reset();
+    $('#itemId').val('');
+}
+
+// ================= PAGE LOAD =================
 $(document).ready(function() {
     loadItems();
 
-    // Add input validation for numeric fields
+    // Input validation
     $('#itemPrice, #itemCost').on('input', function() {
-        // Allow only numbers and decimal point
         this.value = this.value.replace(/[^0-9.]/g, '');
-
-        // Prevent multiple decimal points
         const parts = this.value.split('.');
         if (parts.length > 2) {
             this.value = parts[0] + '.' + parts.slice(1).join('');
@@ -183,7 +183,6 @@ $(document).ready(function() {
     });
 
     $('#itemQuantity').on('input', function() {
-        // Allow only integers
         this.value = this.value.replace(/[^0-9]/g, '');
     });
 });
