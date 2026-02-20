@@ -1,8 +1,6 @@
 package lk.ijse.backend.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Table(name = "customer")
@@ -15,8 +13,11 @@ import lombok.*;
 public class Customer {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String cId;
     private String cName;
     private String cAddress;
     private String cPhone;
+
+
 }

@@ -1,24 +1,35 @@
 package lk.ijse.backend.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.*;
 import lombok.*;
 
+@Entity
 @Table(name = "item")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @ToString
-@Entity
 public class Item {
-    @Id
-    private String itemId;
-    private String itemName;
-    private double itemPrice;
-    private int itemQuantity;
-    private double itemCost;
-    private String itemDescription;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "item_id")
+    private Integer itemId;
+
+    @Column(name = "item_name", nullable = false)
+    private String itemName;
+
+    @Column(name = "item_price", nullable = false)
+    private double itemPrice;
+
+    @Column(name = "item_quantity", nullable = false)
+    private int itemQuantity;
+
+    @Column(name = "item_cost", nullable = false)
+    private double itemCost;
+
+    @Column(name = "item_description")
+    private String itemDescription;
 }

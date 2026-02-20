@@ -1,8 +1,11 @@
 package lk.ijse.backend.controller;
 
+import jakarta.validation.Valid;
 import lk.ijse.backend.dto.ItemDTO;
 import lk.ijse.backend.service.custom.ItemService;
+import lk.ijse.backend.util.APIResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,39 +19,34 @@ public class ItemController {
 
     private final ItemService itemService;
 
-    // POST endpoint to save item
     @PostMapping
-    public ResponseEntity<String> saveItem(@RequestBody ItemDTO itemDTO) {
+    public ResponseEntity<APIResponse<String>> saveItem(@Valid @RequestBody ItemDTO itemDTO) {
+        itemDTO.setItemId(null);  // Ensure auto-generation
         itemService.saveItem(itemDTO);
-        return ResponseEntity.ok("Item saved successfully");
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new APIResponse<>(201, "Item created successfully", null));
     }
 
-    // GET endpoint to retrieve all items
     @GetMapping
-    public ResponseEntity<List<ItemDTO>> getAllItems() {
-        List<ItemDTO> items = itemService.getAllItems();
-        return ResponseEntity.ok(items);
+    public ResponseEntity<APIResponse<List<ItemDTO>>> getAllItems() {
+        return ResponseEntity.ok(new APIResponse<>(200, "Success", itemService.getAllItems()));
     }
 
-    // GET endpoint to retrieve an item by ID
     @GetMapping("/{id}")
-    public ResponseEntity<ItemDTO> getItemById(@PathVariable String id) {
-        ItemDTO item = itemService.getItemById(id);
-        return ResponseEntity.ok(item);
+    public ResponseEntity<APIResponse<ItemDTO>> getItemById(@PathVariable Integer id) {
+        return ResponseEntity.ok(new APIResponse<>(200, "Success", itemService.getItemById(String.valueOf(id))));
     }
 
-    // PUT endpoint to update item
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateItem(@PathVariable String id, @RequestBody ItemDTO itemDTO) {
-        itemService.updateItem(id, itemDTO);
-        return ResponseEntity.ok("Item updated successfully");
+    public ResponseEntity<APIResponse<String>> updateItem(@PathVariable Integer id,
+                                                          @Valid @RequestBody ItemDTO itemDTO) {
+        itemService.updateItem(String.valueOf(id), itemDTO);
+        return ResponseEntity.ok(new APIResponse<>(200, "Item updated successfully", null));
     }
 
-    // DELETE endpoint to delete item
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteItem(@PathVariable String id) {
-        itemService.deleteItem(id);
-        return ResponseEntity.ok("Item deleted successfully");
+    public ResponseEntity<APIResponse<String>> deleteItem(@PathVariable Integer id) {
+        itemService.deleteItem(String.valueOf(id));
+        return ResponseEntity.ok(new APIResponse<>(200, "Item deleted successfully", null));
     }
 }
-

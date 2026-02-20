@@ -132,7 +132,6 @@ function populateForm(id, name, address, phone) {
     $('#customerPhone').val(phone);
 }
 
-// Load customers when page loads
 $(document).ready(function() {
     loadCustomers();
 });

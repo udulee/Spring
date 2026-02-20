@@ -11,7 +11,6 @@ public class CustomerDTO {
     public CustomerDTO() {
     }
 
-
     public CustomerDTO(String cId, String cName, String cAddress, String cPhone) {
         this.cId = cId;
         this.cName = cName;

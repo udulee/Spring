@@ -10,4 +10,10 @@ public interface ItemService {
     ItemDTO getItemById(String id);
     void updateItem(String id, ItemDTO itemDTO);
     void deleteItem(String id);
+
+    ItemDTO getItemById(Integer id);
+
+    void updateItem(Integer id, ItemDTO itemDTO);
+
+    void deleteItem(Integer id);
 }
