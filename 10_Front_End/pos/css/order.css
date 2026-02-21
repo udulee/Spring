@@ -1,0 +1,182 @@
+/* ===== Body & Fonts ===== */
+body {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    background-color: #f9fafb;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* ===== Navbar Styling ===== */
+.navbar {
+    background-color: #0d6efd;
+}
+.navbar .navbar-brand, .navbar .nav-link {
+    color: #fff;
+}
+.navbar .nav-link.active {
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+/* ===== Spinner Overlay ===== */
+.spinner-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255,255,255,0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    display: none; /* hide initially */
+}
+
+/* ===== Alert Box ===== */
+#alertBox {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 1050;
+}
+
+/* ===== Cards ===== */
+.card {
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+.card-header {
+    font-weight: 600;
+    font-size: 1rem;
+    background-color: #fff;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+/* ===== Form ===== */
+.form-label {
+    font-weight: 500;
+}
+.auto-tag, .readonly-tag {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #6c757d;
+    margin-left: 0.25rem;
+}
+.total-price {
+    background-color: #e9ecef;
+    font-weight: 600;
+}
+
+/* ===== Stock Badge ===== */
+.badge-stock {
+    padding: 0.4em 0.8em;
+    font-size: 0.85rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+}
+
+/* ===== Buttons ===== */
+.btn {
+    border-radius: 0.5rem;
+    font-weight: 500;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+/* ===== Table ===== */
+.table {
+    margin-bottom: 0;
+    border-radius: 0.75rem;
+    overflow: hidden;
+}
+.table thead {
+    background-color: #0d6efd;
+    color: #fff;
+}
+.table thead th {
+    border: none;
+    font-weight: 600;
+}
+.table tbody tr:hover {
+    background-color: #f1f5ff;
+}
+.table tbody td {
+    vertical-align: middle;
+}
+
+/* ===== Misc Styling ===== */
+.text-muted {
+    font-size: 0.85rem;
+}
+.gap-2 {
+    gap: 0.5rem !important;
+}
+.mb-3 { margin-bottom: 1rem !important; }
+.mb-4 { margin-bottom: 1.5rem !important; }
+
+/* NAVBAR STYLING */
+nav {
+    display: flex;
+    gap: 10px;          /* Space between buttons */
+    flex-wrap: wrap;     /* Wrap on smaller screens */
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+/* Common button style */
+nav .btn {
+    font-weight: 500;
+    padding: 8px 18px;
+    border-radius: 25px;   /* Rounded buttons */
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+    font-size: 0.9rem;
+}
+
+/* Primary button style (Home) */
+nav .btn-outline-primary {
+    color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+nav .btn-outline-primary:hover {
+    background-color: #0d6efd;
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+/* Secondary button style (Item) */
+nav .btn-outline-secondary {
+    color: #6c757d;
+    border-color: #6c757d;
+}
+
+nav .btn-outline-secondary:hover {
+    background-color: #6c757d;
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+/* Success button style (Order, Order History) */
+nav .btn-outline-success {
+    color: #198754;
+    border-color: #198754;
+}
+
+nav .btn-outline-success:hover {
+    background-color: #198754;
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+/* Active page button highlight */
+nav .btn.active, nav .btn.active:hover {
+    background-color: #0d6efd !important; /* Blue highlight */
+    color: #fff !important;
+    border-color: #0d6efd !important;
+}
